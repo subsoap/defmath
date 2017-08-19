@@ -25,6 +25,12 @@ function M.round(x)
 	return x + a
 end
 
+-- Round to decimal point
+function M.round_decimal(number, decimal)
+	decimal = 10 ^ (decimal or 0)
+	return math.floor(number*decimal+0.5)/decimal
+end
+
 -- Clamp
 function M.clamp(x, min, max)
 	if x > max then x = max
@@ -58,6 +64,27 @@ end
 -- Random float in range
 function M.rand_range(min, max)
 	return math.random() * (max - min) + min
+end
+
+-- Linear interpolation
+function M.lerp(start, stop, amount)
+	amount = M.clamp(amount, 0, 1)
+	return((1-amount) * start + amount * stop)	
+end
+
+-- Distance between two 2d points
+function M.dist2d(x1, y1, x2, y2)
+	return ((x2-x1)^2+(y2-y1)^2)^0.5
+end
+
+-- Distance betwen two 3d points
+function M.dist3d(x1, y1, z1, x2, y2, z2)
+	return ((x2-x1)^2+(y2-y1)^2+(z2-z1)^2)^0.5
+end
+
+-- Angle in radians of vector between two points
+function M.angle_of_vector_between_two_points(x1,y1, x2,y2) 
+	return math.atan2(y2-y1, x2-x1) 
 end
 
 return M
