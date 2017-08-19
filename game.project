@@ -1,0 +1,12 @@
+[project]
+title = DefMath
+
+[library]
+include_dirs = defmath
+
+[input]
+game_binding = /example/main.input_bindingc
+
+[bootstrap]
+main_collection = /example/main.collectionc
+
