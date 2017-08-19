@@ -93,4 +93,11 @@ function M.setup_rng()
 	math.random(); math.random(); math.random() -- clear bad rng	
 end
 
+-- Check if number is within range
+function M.is_within_range(number, min, max)
+	return number >= min and number <= max
+end
+
+
+
 return M
