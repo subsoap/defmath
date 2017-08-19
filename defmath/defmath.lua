@@ -87,4 +87,10 @@ function M.angle_of_vector_between_two_points(x1,y1, x2,y2)
 	return math.atan2(y2-y1, x2-x1) 
 end
 
+-- Clears bad RNG and sets seed to be based on OS time
+function M.setup_rng()
+	math.randomseed(os.time() + math.random())
+	math.random(); math.random(); math.random() -- clear bad rng	
+end
+
 return M
