@@ -1,0 +1,554 @@
+Explore the vmath module of Defold. Many of the functions below have built in versions. The information below is provided as a reference in case you have need.
+
+You can use ZeroBrane Studio to quickly test code samples.
+
+Angles, Radians, Degrees
+
+With Defold (and in math), 0 degrees is equal to east, 90 to north, 180 to west, 270 to south, and 360 to east again.
+
+Radians are often used in game development as an alternative to degrees for representing angles. Many programming languages have built in functions for converting between the two. Radians are far more useful, are cleaner, and easier to use once you understand them. If you do not have a strong understanding of them you should dig into any resources you can find which explain them until they click for you.
+
+Radians are based on the radius of a circle (the distance between the center of a circle and any point along its length) - 1 radius measure is equal to 1 radian along the circle's length. 1 radian is about 57 degrees.
+
+There are 2pi radians in a circle. In most math, and in Defold, we begin to count from 0 facing right and then begin to count counter clockwise upward for pi/2 (90 degrees), then continue to count until we are facing left at pi (180 degrees), then continue to count until we are facing downward at 3pi/2 (270 degrees), and then continuing to count until we are again facing right  at 2pi (360 degrees) to complete a full circle.
+
+There are about 6.283... radians for the length of a circle. That is equal to 2 * pi. To visualize this better imagine you have a picture of a circle and a dot at its center. You take some string and cut it to the length from center of the circle to any point on the circle's circumference. You place the cut string along the circumference, and repeat measuring, cutting string, and placing. You will find that your seventh piece of string doesn't fit - only about 28% of its length fits. So you have 6.28... pieces of string.
+
+math.pi = 3.14...
+math.deg() converts radians into degrees
+math.rad() converts degrees into radians
+
+To convert from degrees to radians divide the degrees by (180/pi).
+To convert from radians to degrees multiply the radians by (180/pi).
+
+print(math.deg(2 * math.pi)) -- 360
+print((2 * math.pi) * (180/math.pi)) -- 360
+
+print(math.rad(360)) -- 2pi ... 6.2831853071796
+print(360 / (180/math.pi)) -- 2pi ... 6.2831853071796
+print(2*math.pi) -- 2pi ... 6.2831853071796
+
+2pi = one full circle
+pi = one half circle
+2pi/3 = one third circle
+pi/2 = one fourth circle
+2pi/5 = one fifth circle
+pi/3 = one sixth circle
+2pi/7 = one seventh circle
+pi/4 = one eighth circle
+2pi/9 = one ninth circle
+pi/5 = one tenth circle
+2pi/11 = one eleventh circle
+pi/6 = one twelfth circle
+
+30 degrees = pi/6 radians
+45 degrees = pi/4 radians
+60 degrees = pi/3 radians
+90 degrees = pi/2 radians
+180 degrees = pi radians
+270 degrees = 3pi/2 radians
+360 degrees = 2pi radians
+
+Dot Product (inner product) - Calculating Angle Differences
+
+The dot product of two vectors tells you how far apart they are in a single number - the angle amount between them. It produces a scalar value - how much of one vector is pointing in the direction of another.
+
+vector1.x * vector2.x + vector1.y * vector2.y
+
+This is equal to
+
+vector1.magnitude * vector2.magnitude * math.cos(angle between vector 1 and vector 2)
+
+If vector1 and vector2 are unit vectors (magnitude of 1) then their dot product will be equal to just math.cos of the angle between the two vectors. Defold does have built in functionality for creating and using vectors and normalization of vectors which you should use when working with the built in vectors.
+
+If you are using unit vectors then the dot product of two vectors can give you useful information. This can be useful when you want to avoid other CPU expensive functionality.
+
+If > 0 : angle between vectors is less than 90 degrees - it is acute
+If < 0 : angle between vectors is more than 90 degrees - it is obtuse
+If == 0 : angle between vectors is 90 degrees - the vectors are orthogonal
+If == 1 : angle between the two vectors is 0 degrees - vectors are parallel and point in same direction
+If == -1 : angle between the two vectors is 180 degrees - vectors are parallel, point in opposite directions 
+
+This information can be used to find relative orientation of other objects in your game. Such as if certain objects are facing others. If you rotate one of the vectors by 90 degrees first you can find if objects are to the left or the right of each other.
+
+Rounding errors may give you values very close to these options in situations where they should be exact (such as being exactly 0). You may want to add extra code to see if values are close enough for you to accept the various conditions.
+
+Cross Product (vector product) tells you the perpendicular direction of any two vectors, how much a vector is perpendicular to another. It can give the axis to rotate around to face something. The 2d form returns a scalar. Its 3d form returns a vector.
+
+cross_product_vectors = function (x1, y1, x2, y2)
+	return x1*y2 - y1*x2 -- 0 == parallel
+end
+
+cross_product_vectors_3d = function (x1, y1, z1, x2, y2, z2)
+	resX = y1 * z2 - z1 * y2
+	resY = z1 * x2 - x1 * z2
+	resZ = x1 * y2 - y1 * x2
+	return resX, resY, resZ
+end
+
+If the z of both vectors in the 3d version is zero then the 3d form will return the "same end result" as the 2d form.
+
+print(cross_product_vectors(1,2,3,4)) -- -2
+print(cross_product_vectors_3d(1,2,0,3,4,0)) -- 0	0	-2
+
+
+
+Angle Between Two 2D Vectors - difference in orientation
+
+angle_between_vectors = function (x1, y1, x2, y2)
+	local arc = math.sqrt((x1*x1 + y1*y1) * (x2 * x2 + y2 * y2))
+	if arc > 0 then
+		arc = math.acos((x1*x2 + y1*y2) / arc)
+		if x1*y2 - y1*x2 < 0 then
+			arc = -arc
+		end
+	end
+	return arc
+end
+
+print(angle_between_vectors(1,1,-1,-1)) -- 3.14... 180 degrees
+
+Angles in Defold
+
+When changing the direction of a 2d object in Defold, by using the Euler (pronounced oiler) property, the angle starts facing right and 0 degrees, goes up to 90 degrees and so on.
+
+go.animate("." "euler.z", go.PLAYBACK_LOOP_PINGPONG, 360, go.EASING_LINEAR, 10) 
+
+Animates the current Game Object so that its angle direction on the z plane is animated back and forth between its current (default 0) and + 360 amount of difference. If you were to first set the euler.z to another value first you would see the animation would go back and forth between a 360 degree arc from that value and +360 degrees of that value.
+
+go.set(".", "euler.z", 180)
+go.animate("." "euler.z", go.PLAYBACK_LOOP_PINGPONG, 360, go.EASING_LINEAR, 10) 
+
+Points and Vectors
+
+A point is a coordinate - it can be x,y for a coordinate on a 2D space, or x,y,z for a coordinate on a 3D space.
+
+A vector is a direction toward a point (relative to an origin) along with a magnitude (length).
+
+Convert Radian Angle to a 2D Vector
+
+angle_to_vector = function (angle, magnitude)
+	magnitude = magnitude or 1 -- if no magnitude supplied make it a unit vector
+	local x = math.cos ( angle ) * magnitude
+	local y = math.sin ( angle ) * magnitude
+	return x, y
+end
+
+Converting Vectors to Radian Angle
+vector_to_angle = function (x,y)
+	return math.atan2 (y, x)
+end
+
+temp_angle = math.pi
+temp_vector_x, temp_vector_y = angle_to_vector(temp_angle)
+print(temp_vector_x, temp_vector_y) -- -1	1.2246063538224e-016
+new_angle = vector_to_angle(temp_vector_x, temp_vector_y)
+print(new_angle) -- 3.1415926535898
+
+x = math.cos(math.pi)
+y = math.sin(math.pi)
+radian = math.atan2(y,x)
+print(radian)
+print(math.pi)
+
+Get magnitude (length) of 2D Vector
+
+get_vector_magnitude = function (x,y)
+	return math.sqrt( x * x + y * y)
+end
+
+print(get_vector_magnitude(2,9)) -- 9.21...
+
+Get magnitude (length) of 3D Vector
+
+get_vector_magnitude_3d = function (x,y,z)
+	return math.sqrt( x * x + y * y + z * z)
+end
+
+Rotating 2D Vectors
+
+Vectors can be rotated without computation by 90 or 180 degrees simply by swapping / negating their x,y values.
+
+x,y = -y,x to rotate 90 degrees counterclockwise
+x,y = y,-x to rotate 90 degrees clockwise
+x,y = -x, -y to rotate 180 degrees
+
+Rotating a vector based on a radian angle
+
+rotate_vector = function(x, y, angle)
+	local c = math.cos(angle)
+	local s = math.sin(angle)
+	return c*x - s*y, s*x + c*y
+end
+
+print(rotate_vector(1,1, math.pi)) -- rotates by 180 degrees to -1, -1
+
+Scaling 2D Vectors
+
+To scale a vector means to increase its magnitude (length) by another magnitude - here called a scalar. A scaled vector has the same orientation but a new magnitude.
+
+scale_vector = function (x,y,scalar)
+	return x * scalar, y * scalar
+end
+
+If you scale a vector by its inverse length (1 / magnitude of vector) the vector will get a length of 1 - it will become a unit vector - it will become normalized.
+
+Normalizing 2D Vectors
+
+Normalization of vectors maintains their orientation, but reduces their magnitude (length) to 1. This new vector is called a unit vector, and is very useful for certain calculations. 
+
+normalize_vector = function (x,y)
+	if x == 0 and y == 0 then return 0, 0 end
+	local magnitude = math.sqrt(x * x + y * y)
+	return x / magnitude, y / magnitude
+end
+
+print(normalize_vector(100,0)) --> 1,0
+
+
+Checking Circular Collisions - Check for collisions between circle shapes
+
+circular_collision_check = function (ax, ay, bx, by, ar, br)
+	-- x and y positions both both objects
+	-- along with their radius
+	local combined_radius = ar + br
+	local dx = bx - ax
+	local dy = by - ay
+	local dist = math.sqrt(dx * dx + dy * dy) -- check distance between objects
+	return dist < combined_radius -- check if the distance is less than the combined radius (overlap)
+end
+
+print(circular_collision_check(1,1,30,25,5,10)) -- false
+print(circular_collision_check(1,2,36,25,50,100)) -- true
+
+Distance Between 2D Points - Find distance between objects on a 2d space
+
+distance_between_points = function (x1,y1,x2,y2)
+	local dX = x2 - x1
+	local dY = y2 - y1
+	return math.sqrt((dX^2) + (dY^2))
+end
+
+print(distance_between_points(0,0,1,1)) -- 1.4142...
+print(distance_between_points(0,0,0,8)) -- 8
+print(distance_between_points(12,4,45,64)) -- 8
+
+Distance Between 3D Points - Find distance between objects in a 3d space
+
+distance_between_points_3d = function (x1,y1,z1,x2,y2,z2)
+	local dX = x2 - x1
+	local dY = y2 - y1
+	local dZ = z2 - z1
+	return math.sqrt((dX^2) + (dY^2) + (dZ^2))
+end
+print(distance_between_points_3d(0,0,0,1,1,0)) -- 1.4142...
+
+Get the distance between two x positions
+
+get_distance_x = function (x1, x2)
+  return math.sqrt( (x2 - x1) ^ 2)
+end
+
+print(get_distance_x(-5,10)) -- 15
+
+Get the distance between two y positions
+
+get_distance_y = function (y1, y2)
+  return math.sqrt( (y2 - y1) ^ 2)
+end
+
+print(get_distance_y(-5,10)) -- 15
+
+Average of radian angles
+
+average_angles = function (...)
+	local x,y = 0,0
+	for i=1, select("#", ...) do
+		local a = select(i, ...)
+		x, y = x + math.cos(a), y + math.sin(a)
+	end
+	return math.atan2(y, x)
+end
+
+print(average_angles(1.4, 1.2, 1.6))
+
+Find the angle in degrees between 0,0 and a point
+
+angle_of_point = function (x, y)
+	local radian = math.atan2(y,x)
+	local angle = radian*180/math.pi
+	if angle < 0 then angle = 360 + angle end
+	return angle
+end
+
+print(angle_of_point(0,-4))
+
+Find the degrees between two points
+
+angle_between_points = function (x1, y1, x2, y2)
+	local dX, dY = x2 - x1, y2 - y1
+	return angle_of_point(dX, dY)
+end
+
+print(angle_between_points(0,0,1,1)) -- 45
+
+Find smallest angle between two angles - for dealing with "angles" below 0 or greater than 360 and finding the shortest turn to reach the second
+
+smallest_angle_difference = function ( a1, a2 )
+	local a = a1 - a2
+	
+	if ( a > 180 ) then
+		a = a - 360
+	elseif (a < -180) then
+		a = a + 360
+	end
+	
+	return a
+end
+
+print(smallest_angle_difference(720,270)) -- 90
+
+Round up to the nearest multiple of a number - say you have a number 450 and you want to round it to 500, or round to 1000 if the number was 624 - this sort of thing is useful for dynamic layouts
+
+round_up_nearest_multiple = function (input, target)
+	return math.ceil( input / target) * target
+end
+
+print(round_up_nearest_multiple(24, 100)) -- 100
+print(round_up_nearest_multiple(124, 100)) -- 200
+
+Rounds up or down to the nearest container size multiple
+
+round_nearest_multiple = function (input, target)
+	local result = math.floor( (input / target) + 0.5) * target
+	if result == 0 then result = target end -- ensure non-zero container size
+	return result
+end
+
+print(round_nearest_multiple(24, 100)) -- 100
+print(round_nearest_multiple(124, 100)) -- 100
+print(round_nearest_multiple(155, 100)) -- 200
+
+Clamps a number into a range
+
+clamp_number = function (number, low, high)
+	return math.min(math.max(number, low), high)
+end
+
+print(clamp_number(45, 0, 100)) -- 45
+print(clamp_number(45, 50, 100)) -- 50
+print(clamp_number(101, 0, 100)) -- 100
+
+Lerp - linear interpolation - useful to use with delta time (dt) to get smooth movements
+
+lerp_number = function (start, stop, amount)
+	amount = clamp_number(amount, 0, 1) -- amount is also called the "factor"
+	return((1-amount) * start + amount * stop)
+end
+
+print(lerp_number(0,1,0.4)) -- 0.4
+print(lerp_number(20,100,0.1)) -- 28
+
+
+Normalize (percentage) two numbers so that they sum to unity (1)
+Note that there are multiple meanings for "normalization"
+This kind of normalization is useful for example for turning event counts into probabilities
+Or conditional probabilities, such as rolling a dice
+Also useful in graphics stats
+When normalizing vectors it means change the magnitude to 1 so that it's more useful for orientation
+
+normalize_numbers = function (a,b)
+	n = a + b
+	if n == 0 then return 0,0,0
+	else
+		return a/n,b/n,n
+	end
+end
+
+print(normalize_numbers(5,10)) -- 0.333...	0.666...	3
+print(normalize_numbers(1,99)) -- 0.01	0.99	100
+
+Get sign of number : 1 if positive, -1 if negative, 0 if 0
+
+get_sign = function (number)
+	return number > 0 and 1 or number < 0 and -1 or 0
+end
+
+Round a number
+
+round_number = function(number)
+	return math.floor(number + 0.5)
+end
+
+-- normalize all values of an array to be within the range of 0 to 1 based on their "weight"
+-- divide each number in your sample by the sum of all the numbers in your sample
+
+Matrices
+
+A matrix is an array of related values. Vectors can be represented as matrices.  In most game dev situations, you will be using matrices which have the same number of rows and columns.
+
+A B
+C D
+
+The above is a matrix with a 2x2 dimension. A is element 1,1 and D is element 2,2. 
+
+A B C D
+E F G H
+
+The above is a matrix with a 2x4 dimension. A is element 1,1 and H is element 4,2.
+
+Vectors can be represented as matrices either as a long row or a tall column. These representations allow you to modify matrices with vectors.
+
+x y z
+
+or
+
+x
+y
+z
+
+Adding, Subtracting of Matrices
+
+To add two matrices together you simply add the elements together. Same with subtraction.
+
+A B
+C D
++
+W X
+Y Z
+=
+A+W B+X
+C+Y Z+D
+
+Multiplying Matrices
+
+You can multiply a matrix by a single number, a scalar, by multiplying that number by each element individually.
+
+2
+x
+1 0
+2 -4
+=
+2 0
+4 -8
+
+To multiply two matrices together it requires to do the dot product of the rows and columns - multiply matching members and then add them up together. 
+
+Consider two matrices multiplied together
+
+1 2 3
+4 5 6
+x
+7 8
+9 10
+11 12
+=
+(1,2,3)*(7,9,11) (1,2,3)*(8,10,12) 
+(4,5,6)*(7,9,11) (4,5,6)*(8,10,12)
+=
+1*7+2*9+3*11 1*8+2*10+3*12
+4*7+5*9+6*11 4*8+5*10+6*12
+=
+58 64
+139 154
+
+
+To be able to multiply two matrices, the number of columns in the first matrix must equal the number of rows in the second matrix. The resulting matrix will have the same number of rows as the second matrix, and the same number of columns as the first matrix. A 1x3 matrix multiplied by a 3x4 matrix produces a 1x4 matrix.
+
+A B
+C D
+*
+W X
+Y Z
+=
+A*W+B*Y A*X+B*Z
+C*W+D*Y C*X+D*Z
+
+Matrix multiplication is not commutative, order matters. If you multiply two matrices together in a different order you will get different results.
+
+1 2
+3 4
+x
+5 6
+7 8
+=
+(1,2)*(5,7) (1,2)*(6,8)
+(3,4)*(5,7) (3,4)*(6,8)
+=
+1*5+2*7 1*6+2*8
+3*5+4*7 3*6+4*8
+=
+19 22
+43 50
+
+vs
+
+5 6
+7 8
+x
+1 2
+3 4
+=
+(5,6)*(1,3) (5,6)*(2,4)
+(7,8)*(1,3) (7,8)*(2,4)
+=
+5*1+6*3 5*2+6*4
+7*1+8*3 7*2+8*4
+=
+23 34
+31 46
+
+You can write your own functions for deal with matrices, but Defold has most of what you need built into its own API.
+
+Matrices are mostly used with graphics programming such as transformation matrices in rendering.
+
+Quaternions
+
+Unit quaternions (magnitude of 1) are useful for representing orientation. Imagine a sphere with a dot at its center. Imagine an airplane's tail end attached to the dot. The airplane can be rotated around the sphere to face any direction, and it can be rotated so that its upward direction is changed. If you can imagine this then you can imagine how a unit quaternion looks like and how it can be useful. While Euler angles are convenient for 2D z rotation, for anything 3D you will want to use quaternions for representing orientation change.
+
+
+
+local function find_center_of_points_2d(points)
+  local total_x = total_x or 0
+  local total_y = total_y or 0
+  local count = #points
+
+  for id, point in pairs(points) do
+    total_x = total_x + point.x
+    total_y = total_y + point.y
+  end
+  
+  if not (total_x == 0) then total_x = total_x / count end
+  if not (total_y == 0) then total_y = total_y / count end
+  
+  return total_x, total_y
+end
+
+points_2d = {{x=0,y=0}, {x=10,y=10}, {x=100,y=100}, {x=-10,y=-100}, {x=54,y=-247} }
+
+midpoint_x, midpoint_y = find_center_of_points_2d(points_2d)
+print(midpoint_x, midpoint_y)
+
+local function find_center_of_points_3d(points)
+  local total_x = total_x or 0
+  local total_y = total_y or 0
+  local total_z = total_z or 0
+  local count = #points
+
+  for id, point in pairs(points) do
+    total_x = total_x + point.x
+    total_y = total_y + point.y
+    total_z = total_z + point.z
+  end
+  
+  if not (total_x == 0) then total_x = total_x / count end
+  if not (total_y == 0) then total_y = total_y / count end
+  if not (total_z == 0) then total_z = total_z / count end
+  
+  return total_x, total_y, total_z
+end
+
+points_3d = {{x=0,y=0, z=22}, {x=10,y=10, z=15}, {x=100,y=100, z=0}, {x=-10,y=-100, z=0}, {x=54,y=-247, z=0} }
+
+midpoint3d_x, midpoint3d_y, midpoint3d_z = find_center_of_points_3d(points_3d)
+print(midpoint3d_x, midpoint3d_y, midpoint3d_z)
