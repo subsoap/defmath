@@ -18,8 +18,10 @@ function final(self)
 end
 
 function update(self, dt)
-	self.counter = self.counter + 1
-	print(defmath.wrap(self.counter,10))
+	while self.counter < 30 do
+		self.counter = self.counter + 1
+		print(defmath.wrap(self.counter,10))
+	end
 end
 
 function on_message(self, message_id, message, sender)
