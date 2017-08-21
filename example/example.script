@@ -1,6 +1,8 @@
 local defmath = require("defmath.defmath")
 
 function init(self)
+	self.wrap_counter = 0	
+	
 	print(defmath.dist2d(0,0,100,100)) -- 141.42
 	print(defmath.dist3d(0,0,0,100,100,100)) -- 173.205
 	print(defmath.angle_of_vector_between_two_points(0,0,0,1)) -- radians, 1.5707963267949, 90deg
@@ -8,8 +10,8 @@ function init(self)
 	defmath.setup_rng()
 	print(math.random(1,100))
 	print(defmath.radians_to_degrees(defmath.degrees_to_radians(90)))
-
-	self.counter = 0	
+	print(defmath.sum(1,1,1,1,1))
+	print(defmath.average(1,2,3,4,5,6,7,8,9))
 end
 
 function final(self)
@@ -18,9 +20,9 @@ function final(self)
 end
 
 function update(self, dt)
-	while self.counter < 30 do
-		self.counter = self.counter + 1
-		print(defmath.wrap(self.counter,10))
+	while self.wrap_counter < 30 do
+		self.wrap_counter = self.wrap_counter + 1
+		print(defmath.wrap(self.wrap_counter,10))
 	end
 end
 

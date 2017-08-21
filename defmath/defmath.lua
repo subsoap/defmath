@@ -117,5 +117,21 @@ function M.wrap(number, bound)
 	end
 end
 
+-- Sums a set of values
+function M.sum(...)
+  local sum = 0
+  for a = 1, select("#", ...) do
+    local v = select(a, ...)
+    sum = sum + v
+  end
+  return sum
+end
+
+--- Average of set of values
+function M.average(...)
+	local arg ={...}
+	return (M.sum(...) / #arg)
+end
+
 
 return M
