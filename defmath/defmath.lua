@@ -127,11 +127,25 @@ function M.sum(...)
   return sum
 end
 
---- Average of set of values
+-- Average of set of values
 function M.average(...)
 	local arg ={...}
 	return (M.sum(...) / #arg)
 end
 
+-- Get difference between two values
+function M.difference(a,b) 
+	return math.abs(a-b)
+end
+
+-- if a number is even
+function M.is_even(number)
+	return math.fmod(number, 2) == 0
+end
+
+-- if a number is odd
+function M.is_odd(number)
+	return M.is_even(number) ~= true
+end
 
 return M
