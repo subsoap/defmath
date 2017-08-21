@@ -27,6 +27,9 @@ function init(self)
 	local vector4 = vmath.vector3(0,-1,0)
 	
 	print(defmath.average_midpoint_of_vectors(vector1, vector2, vector3, vector4))
+	
+	print(defmath.fraction_of(5,15))
+	print(defmath.percent_of(5,15))
 end
 
 function final(self)

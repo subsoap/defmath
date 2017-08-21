@@ -196,5 +196,15 @@ function M.average_midpoint_of_vectors(...)
 
 end
 
+-- Fraction of
+function M.fraction_of(a,b)
+	return a/b
+end
+
+-- Percent of
+function M.percent_of(a,b)
+	return M.fraction_of(a,b) * 100
+end
+
 
 return M
