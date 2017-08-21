@@ -7,6 +7,9 @@ function init(self)
 	print(defmath.round_decimal(0.12345678,3))
 	defmath.setup_rng()
 	print(math.random(1,100))
+	print(defmath.radians_to_degrees(defmath.degrees_to_radians(90)))
+
+	self.counter = 0	
 end
 
 function final(self)
@@ -15,8 +18,8 @@ function final(self)
 end
 
 function update(self, dt)
-	-- Add update code here
-	-- Remove this function if not needed
+	self.counter = self.counter + 1
+	print(defmath.wrap(self.counter,10))
 end
 
 function on_message(self, message_id, message, sender)

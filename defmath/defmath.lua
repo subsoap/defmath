@@ -98,6 +98,24 @@ function M.is_within_range(number, min, max)
 	return number >= min and number <= max
 end
 
+-- Convert radians to degrees
+function M.radians_to_degrees(radian)
+	return 180 / math.pi * radian
+end
+
+-- Convert degrees to radians
+function M.degrees_to_radians(degrees)
+	return math.pi / 180 * degrees
+end
+
+-- Wrap a number to betwen 0 and a range bound
+function M.wrap(number, bound)
+	if (number < 0) then
+		return bound - (math.fmod(-number, bound))
+	else
+		return math.fmod(number, bound)
+	end
+end
 
 
 return M
