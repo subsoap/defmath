@@ -39,11 +39,16 @@ function M.clamp(x, min, max)
 	return x
 end
 
---Sign
+-- Sign
 function M.sign(x)
 	if x >= 0 then return 1
 	else return -1
 	end
+end
+
+-- Checks if two numbers have the same sign
+function M.same_sign(a,b)
+	return M.sign(a) == M.sign(b)
 end
 
 -- Vect to Quat
@@ -117,6 +122,22 @@ function M.wrap(number, bound)
 	end
 end
 
+-- Bound a number so that it is no larger than max and no smaller than min
+function M.bound(number, min, max)
+	if number < min then 
+		number = min
+	elseif number > max then
+		number = max
+	end
+	return number
+end
+
+-- Adds an amount to a value within the value going over max or below min
+function M.bound_add(number, amount, min, max)
+	number = number + amount
+	return M.bound(number, min, max)
+end
+
 -- Sums a set of values
 function M.sum(...)
   local sum = 0
@@ -147,5 +168,17 @@ end
 function M.is_odd(number)
 	return M.is_even(number) ~= true
 end
+
+-- Wrap an angle between -180 and +180
+function M.wrap_angle(angle)
+	if angle > 180 then
+		angle = M.wrap_angle(angle - 360)
+	elseif angle < -180 then
+		angle = M.wrap_angle(angle + 360)
+	end
+	return angle
+end
+
+
 
 return M

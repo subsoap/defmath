@@ -1,7 +1,8 @@
 local defmath = require("defmath.defmath")
 
 function init(self)
-	self.wrap_counter = 0	
+	self.wrap_counter = 0
+	self.wrap_angle_counter = 0
 	
 	print(defmath.dist2d(0,0,100,100)) -- 141.42
 	print(defmath.dist3d(0,0,0,100,100,100)) -- 173.205
@@ -15,6 +16,7 @@ function init(self)
 	print(defmath.difference(-10,10))
 	print(defmath.is_even(10))
 	print(defmath.is_odd(10))
+	print(defmath.wrap_angle(360))
 end
 
 function final(self)
@@ -23,9 +25,14 @@ function final(self)
 end
 
 function update(self, dt)
-	while self.wrap_counter < 30 do
+	-- remove and false to test these
+	while self.wrap_counter < 30 and false do
 		self.wrap_counter = self.wrap_counter + 1
 		print(defmath.wrap(self.wrap_counter,10))
+	end
+	while self.wrap_angle_counter < 1000 and false do
+		self.wrap_angle_counter = self.wrap_angle_counter + math.random(25)
+		print(defmath.wrap_angle(self.wrap_angle_counter))
 	end
 end
 
