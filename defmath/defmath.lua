@@ -179,6 +179,11 @@ function M.wrap_angle(angle)
 	return angle
 end
 
+-- Angle between vmath vectors in radians
+function M.angle_between_vectors(vector1, vector2)
+	return math.atan2(vector2.y-vector1.y, vector2.x-vector1.x) 
+end
+
 
 
 return M
