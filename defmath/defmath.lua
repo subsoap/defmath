@@ -184,6 +184,17 @@ function M.angle_between_vectors(vector1, vector2)
 	return math.atan2(vector2.y-vector1.y, vector2.x-vector1.x) 
 end
 
+-- Average midpoint of a set of vmath vectors
+function M.average_midpoint_of_vectors(...)
+	local vectors = {...}
+	local x,y,c = 0,0,#vectors
+	for i=1, c do
+		x = x + vectors[i].x
+		y = y + vectors[i].y
+	end
+	return x/c, y/c
+
+end
 
 
 return M
