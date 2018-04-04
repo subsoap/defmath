@@ -206,5 +206,9 @@ function M.percent_of(a,b)
 	return M.fraction_of(a,b) * 100
 end
 
+-- Used for MinMax Range
+function M.min_max(min, max, value)
+	return math.min(math.max(value, min), max)
+end
 
 return M
