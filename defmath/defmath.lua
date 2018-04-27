@@ -211,4 +211,36 @@ function M.min_max(min, max, value)
 	return math.min(math.max(value, min), max)
 end
 
+-- Used to find a point in a tringle
+-- x0, y0 are the points that are being checked against the rest to see if it's inside
+function M.in_triangle(x0, y0, x1, y1, x2, y2, x3, y3)
+	local b0 = (x2 - x1) * (y3 - y1) - (x3 - x1) * (y2 - y1)
+	local b1 = ( (x2 - x0) * (y3 - y0) - (x3 - x0) * (y2 - y0)) / b0
+	if b1 <= 0 then return false end 
+	
+	local b2 = ( (x3 - x0) * (y1 - y0) - (x1 - x0) * (y3 - y0)) / b0
+	if b2 <= 0 then return false end
+
+	local b3 = ( (x1 - x0) * (y2 - y0) - (x2 - x0) * (y1 - y0)) / b0
+	if b3 <= 0 then return false end
+
+	return true
+end 
+
+-- arr must be 6 in legth: top x/y, bottom right x/y, bottom left x/y
+function M.in_triangle(x0, y0, arr)
+
+	local b0 = (arr[3] - arr[1]) * (arr[6] - arr[2]) - (arr[5] - arr[1]) * (arr[4] - arr[2])
+	local b1 = ( (arr[3] - x0) * (arr[6] - y0) - (arr[5] - x0) * (arr[4] - y0)) / b0
+	if b1 <= 0 then return false end
+
+	local b2 = ( (arr[5] - x0) * (arr[2] - y0) - (arr[1] - x0) * (arr[6] - y0)) / b0
+	if b2 <= 0 then return false end
+
+	local b3 = ( (arr[1] - x0) * (arr[4] - y0) - (arr[3] - x0) * (arr[2] - y0)) / b0
+	if b3 <= 0 then return false end 
+
+	return true
+end
+
 return M
