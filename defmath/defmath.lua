@@ -211,6 +211,14 @@ function M.min_max(min, max, value)
 	return math.min(math.max(value, min), max)
 end
 
+function M.min_value(smallest, value)
+	return math.max(value, smallest)
+end 
+
+function M.max_value(largest, value)
+	return math.min(value, largest)
+end 
+
 -- Used to find a point in a tringle
 -- x0, y0 are the points that are being checked against the rest to see if it's inside
 function M.in_triangle(x0, y0, x1, y1, x2, y2, x3, y3)
