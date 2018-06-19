@@ -250,5 +250,9 @@ function M.in_triangle(x0, y0, arr)
 
 	return true
 end
+-- box intersection of 2 square 
+function M.box_intersect(ax, ay, awidth, aheight, bx, by, bwidth, bheight)
+	return (math.abs(ax - bx) * 2 < (awidth + bwidth)) and (math.abs(ay - by) * 2 < (aheight + bheight)) 
+end 
 
 return M
