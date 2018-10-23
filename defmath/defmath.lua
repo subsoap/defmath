@@ -254,5 +254,24 @@ end
 function M.box_intersect(ax, ay, awidth, aheight, bx, by, bwidth, bheight)
 	return (math.abs(ax - bx) * 2 < (awidth + bwidth)) and (math.abs(ay - by) * 2 < (aheight + bheight)) 
 end 
+--see if a single point is within a rotated rectangle
+function M.check_point_in_rect(rx, ry, rw, rh, rot, px, py)
+	local dx = px - rx
+	local dy = py - ry
+
+	local h1 = math.sqrt(dx * dx + dy * dy)
+	local currA = math.atan2(dy, dx)
+
+	local newA = currA - rot
+
+	local x2 = math.cos(newA) * h1
+	local y2 = math.sin(newA) * h1
+
+	if (x2 > - 0.5 * rw and x2 < 0.5 * rw and y2 > - 0.5 * rh and y2 < 0.5 * rh) then 
+		return true 
+	end 
+
+	return false
+end
 
 return M
